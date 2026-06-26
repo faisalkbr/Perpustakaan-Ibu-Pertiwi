@@ -41,8 +41,16 @@ Domain: **Sistem Informasi Peminjaman**, dengan akses berbasis peran (RBAC).
 7. **Konfirmasi Peminjaman** — antrean pengajuan (Menunggu/Disetujui/Ditolak), setujui/tolak.
 8. **Pengembalian** — daftar peminjaman aktif, proses pengembalian + hitung denda otomatis.
 
-Routing dijaga di dua sisi: middleware `role:librarian,head` di API dan `ProtectedRoute`
-berbasis peran di frontend (anggota tidak bisa membuka `/admin`, dan sebaliknya).
+**Khusus Kepala Perpustakaan** (menu tambahan di sidebar):
+
+9. **Data Staf** — tabel CRUD akun staf (Pustakawan/Kepala) + modal dengan pilihan jabatan;
+   Kepala tidak dapat menghapus/menonaktifkan/menurunkan peran akunnya sendiri.
+10. **Laporan & Rekapitulasi** — filter jenis (Peminjaman/Denda/Koleksi) & periode, kartu
+    statistik, grafik tren per bulan, tabel rincian, tombol cetak.
+
+Routing dijaga di dua sisi: middleware `role:librarian,head` (dan `role:head` untuk halaman
+9–10) di API, serta `ProtectedRoute` berbasis peran di frontend (anggota tidak bisa membuka
+`/admin`, Pustakawan tidak bisa membuka `/admin/staff` & `/admin/reports`, dan sebaliknya).
 
 ## Prasyarat
 
@@ -140,6 +148,13 @@ Khusus **Pustakawan / Kepala** (`role:librarian,head`):
 | POST   | `/librarian/loans/{id}/approve`     | Setujui (pending → active) |
 | POST   | `/librarian/loans/{id}/reject`      | Tolak (pending → rejected) |
 | POST   | `/librarian/loans/{id}/return`      | Pengembalian (active → returned + denda) |
+
+Khusus **Kepala Perpustakaan** (`role:head`):
+
+| Method | Endpoint                            | Keterangan |
+|--------|-------------------------------------|------------|
+| GET/POST/PATCH/DELETE | `/staff[/{id}]`      | Kelola akun staf (Pustakawan/Kepala) |
+| GET    | `/reports/summary`                  | Rekap (`?type=peminjaman\|denda\|koleksi&start=&end=`) — totals, tren bulanan, buku terpopuler, rincian |
 
 ## Catatan arsitektur
 
