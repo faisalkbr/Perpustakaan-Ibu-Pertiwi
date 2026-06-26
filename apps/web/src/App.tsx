@@ -12,6 +12,8 @@ import BooksAdminPage from '@/pages/admin/BooksAdminPage'
 import MembersAdminPage from '@/pages/admin/MembersAdminPage'
 import LoanRequestsPage from '@/pages/admin/LoanRequestsPage'
 import ReturnsPage from '@/pages/admin/ReturnsPage'
+import StaffAdminPage from '@/pages/admin/StaffAdminPage'
+import ReportsPage from '@/pages/admin/ReportsPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 
 function HomeRedirect() {
@@ -49,6 +51,12 @@ export default function App() {
             <Route path="/admin/members" element={<MembersAdminPage />} />
             <Route path="/admin/loans" element={<LoanRequestsPage />} />
             <Route path="/admin/returns" element={<ReturnsPage />} />
+
+            {/* Head librarian only */}
+            <Route element={<ProtectedRoute allow={['head']} />}>
+              <Route path="/admin/staff" element={<StaffAdminPage />} />
+              <Route path="/admin/reports" element={<ReportsPage />} />
+            </Route>
           </Route>
         </Route>
 
