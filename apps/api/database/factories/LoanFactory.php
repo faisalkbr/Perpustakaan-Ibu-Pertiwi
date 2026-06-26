@@ -61,8 +61,25 @@ class LoanFactory extends Factory
         });
     }
 
-    /** Returned late, with a fine. */
+    /** Active and overdue (late). */
     public function late(): static
+    {
+        return $this->state(function () {
+            $borrowedAt = now()->subDays(fake()->numberBetween(20, 30));
+            $dueDate = $borrowedAt->copy()->addDays(Loan::LOAN_DAYS);
+
+            return [
+                'status' => Loan::STATUS_ACTIVE,
+                'borrowed_at' => $borrowedAt,
+                'due_date' => $dueDate,
+                'returned_at' => null,
+                'fine' => 0,
+            ];
+        });
+    }
+
+    /** Returned late, with a fine. */
+    public function returnedLate(): static
     {
         return $this->state(function () {
             $borrowedAt = now()->subDays(fake()->numberBetween(30, 90));

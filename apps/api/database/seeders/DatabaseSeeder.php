@@ -46,7 +46,8 @@ class DatabaseSeeder extends Seeder
         \App\Models\Loan::factory()->active()->for($member)->for($books[1])->create();
         \App\Models\Loan::factory()->returned()->for($member)->for($books[2])->create();
         \App\Models\Loan::factory()->returned()->for($member)->for($books[3])->create();
-        \App\Models\Loan::factory()->late()->for($member)->for($books[4])->create();
-        \App\Models\Loan::factory()->for($member)->for($books[5])->create(); // pending
+        \App\Models\Loan::factory()->late()->for($member)->for($books[4])->create(); // Active overdue
+        \App\Models\Loan::factory()->returnedLate()->for($member)->for($books[5])->create(); // Returned late with fine
+        \App\Models\Loan::factory()->for($member)->for($books[6])->create(); // pending
     }
 }
