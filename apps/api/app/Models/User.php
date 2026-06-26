@@ -21,7 +21,9 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     public const ROLE_MEMBER = 'member';
+
     public const ROLE_LIBRARIAN = 'librarian';
+
     public const ROLE_HEAD = 'head';
 
     /**
@@ -43,6 +45,16 @@ class User extends Authenticatable
     public function scopeMembers(Builder $query): void
     {
         $query->where('role', self::ROLE_MEMBER);
+    }
+
+    /**
+     * Staff accounts: librarians and the head librarian.
+     *
+     * @param  Builder<User>  $query
+     */
+    public function scopeStaff(Builder $query): void
+    {
+        $query->whereIn('role', [self::ROLE_LIBRARIAN, self::ROLE_HEAD]);
     }
 
     /**

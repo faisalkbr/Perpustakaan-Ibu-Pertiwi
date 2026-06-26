@@ -1,5 +1,13 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { BookIcon, LogOutIcon, RotateCcwIcon, UsersIcon, ClipboardCheckIcon } from 'lucide-react'
+import {
+  BookIcon,
+  LogOutIcon,
+  RotateCcwIcon,
+  UsersIcon,
+  ClipboardCheckIcon,
+  UserCogIcon,
+  BarChart3Icon,
+} from 'lucide-react'
 import { Wordmark } from '@/components/brand/Wordmark'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useAuthStore } from '@/store/useAuthStore'
@@ -16,10 +24,26 @@ const NAV = [
   { to: '/admin/returns', label: 'Pengembalian', icon: RotateCcwIcon },
 ]
 
-function NavItems({ pending, onNavigate }: { pending?: number; onNavigate?: () => void }) {
+/** Extra menu shown only to the head librarian (Kepala Perpustakaan). */
+const HEAD_NAV = [
+  { to: '/admin/staff', label: 'Data Staf', icon: UserCogIcon },
+  { to: '/admin/reports', label: 'Laporan', icon: BarChart3Icon },
+]
+
+type NavEntry = { to: string; label: string; icon: typeof BookIcon; badge?: 'pending' }
+
+function NavItems({
+  items,
+  pending,
+  onNavigate,
+}: {
+  items: NavEntry[]
+  pending?: number
+  onNavigate?: () => void
+}) {
   return (
     <>
-      {NAV.map(({ to, label, icon: Icon, badge }) => (
+      {items.map(({ to, label, icon: Icon, badge }) => (
         <NavLink
           key={to}
           to={to}
@@ -51,6 +75,7 @@ export default function LibrarianLayout() {
   const logout = useLogout()
   const { data: counts } = useLoanCounts()
   const pending = counts?.data.pending
+  const navItems = user?.role === 'head' ? [...NAV, ...HEAD_NAV] : NAV
 
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">
@@ -63,7 +88,7 @@ export default function LibrarianLayout() {
           <p className="eyebrow px-3 pt-2 pb-1 text-[11px] text-white/40">
             {ROLE_LABELS[user?.role ?? 'librarian']}
           </p>
-          <NavItems pending={pending} />
+          <NavItems items={navItems} pending={pending} />
         </nav>
         <div className="border-t border-white/10 p-3.5">
           <button
@@ -89,7 +114,7 @@ export default function LibrarianLayout() {
           </button>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-3">
-          <NavItems pending={pending} />
+          <NavItems items={navItems} pending={pending} />
         </nav>
       </div>
 

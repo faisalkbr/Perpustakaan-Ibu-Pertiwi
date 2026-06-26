@@ -29,6 +29,14 @@ export const queryKeys = {
     all: ['members'] as const,
     list: (params: Record<string, unknown>) => ['members', 'list', params] as const,
   },
+  staff: {
+    all: ['staff'] as const,
+    list: (params: Record<string, unknown>) => ['staff', 'list', params] as const,
+  },
+  reports: {
+    all: ['reports'] as const,
+    summary: (params: Record<string, unknown>) => ['reports', 'summary', params] as const,
+  },
   librarianLoans: {
     all: ['librarian-loans'] as const,
     list: (status?: string) => ['librarian-loans', 'list', status ?? 'all'] as const,
