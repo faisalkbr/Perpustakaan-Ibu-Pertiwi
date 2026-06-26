@@ -13,8 +13,23 @@ function buildQuery(params: Record<string, unknown> = {}): string {
   return qs ? `?${qs}` : ''
 }
 
+export interface BookPayload {
+  title: string
+  author: string
+  publisher?: string
+  isbn?: string
+  category?: string
+  published_year?: number
+  stock: number
+  description?: string
+}
+
 export const booksApi = {
   list: (params: BookListParams) =>
     apiFetch<Paginated<Book>>(`/books${buildQuery(params as Record<string, unknown>)}`),
   get: (id: string | number) => apiFetch<{ data: Book }>(`/books/${id}`),
+  create: (payload: BookPayload) => apiFetch<{ data: Book }>('/books', { method: 'POST', body: payload }),
+  update: (id: number, payload: Partial<BookPayload>) =>
+    apiFetch<{ data: Book }>(`/books/${id}`, { method: 'PATCH', body: payload }),
+  remove: (id: number) => apiFetch<null>(`/books/${id}`, { method: 'DELETE' }),
 }

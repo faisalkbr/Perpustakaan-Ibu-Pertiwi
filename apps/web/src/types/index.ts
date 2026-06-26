@@ -23,6 +23,17 @@ export interface Book {
   updated_at: string
 }
 
+export interface Member {
+  id: number
+  name: string
+  email: string
+  phone: string | null
+  address: string | null
+  is_active: boolean
+  active_loans_count?: number
+  created_at: string
+}
+
 export type LoanStatus = 'pending' | 'active' | 'returned' | 'rejected'
 export type LoanDisplayStatus = LoanStatus | 'late'
 
@@ -36,6 +47,7 @@ export interface Loan {
   fine: number
   days_remaining: number | null
   book?: Book
+  member?: { id: number; name: string; email: string }
   created_at: string
 }
 
