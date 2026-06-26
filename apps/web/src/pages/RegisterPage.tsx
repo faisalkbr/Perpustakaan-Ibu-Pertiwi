@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate, Link } from 'react-router-dom'
-import { ArrowRightIcon, EyeIcon, EyeOffIcon, LockIcon, MailIcon, MapPinIcon } from 'lucide-react'
+import { ArrowRightIcon, EyeIcon, EyeOffIcon, LockIcon, MailIcon, MapPinIcon, UserIcon } from 'lucide-react'
 import { Wordmark } from '@/components/brand/Wordmark'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { loginSchema, type LoginValues } from '@/schemas/auth'
-import { useLogin } from '@/hooks/useAuth'
+import { registerSchema, type RegisterValues } from '@/schemas/auth'
+import { useRegister } from '@/hooks/useAuth'
 import { ApiError } from '@/lib/api'
 import { homePathForRole } from '@/lib/roles'
 
@@ -32,11 +32,11 @@ function EditorialPanel() {
       <div className="relative">
         <div className="mb-1 font-serif text-[70px] leading-[0.7] font-bold text-primary">“</div>
         <h2 className="mb-5 max-w-[430px] font-serif text-[33px] leading-[1.34] font-medium text-cream">
-          Setiap buku adalah pintu menuju dunia yang belum Anda kunjungi.
+          Gerbang ilmu pengetahuan terbuka lebar bagi mereka yang mencari kebenaran.
         </h2>
         <div className="mb-4 h-0.5 w-[54px] bg-primary" />
         <p className="max-w-[380px] text-sm leading-relaxed text-cream/60">
-          Akses katalog, ajukan peminjaman, dan kelola koleksi — dalam satu sistem terpadu.
+          Daftarkan diri Anda sebagai anggota Perpustakaan Ibu Pertiwi untuk meminjam koleksi buku, mengakses literatur akademik, dan mengelola riwayat pembacaan Anda.
         </p>
       </div>
 
@@ -56,25 +56,37 @@ function EditorialPanel() {
   )
 }
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const navigate = useNavigate()
-  const login = useLogin()
+  const registerMutation = useRegister()
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
-  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) })
+  } = useForm<RegisterValues>({
+    resolver: zodResolver(registerSchema),
+  })
 
-  const onSubmit = (values: LoginValues) => {
+  const onSubmit = (values: RegisterValues) => {
     setFormError(null)
-    login.mutate(values, {
-      onSuccess: ({ user }) => navigate(homePathForRole(user.role), { replace: true }),
+    registerMutation.mutate(values, {
+      onSuccess: ({ user }) => {
+        navigate(homePathForRole(user.role), { replace: true })
+      },
       onError: (error) => {
         if (error instanceof ApiError) {
-          setFormError(error.fieldErrors.email ?? error.message)
+          const fieldErrors = error.fieldErrors
+          if (Object.keys(fieldErrors).length > 0) {
+            Object.entries(fieldErrors).forEach(([field, msg]) => {
+              setError(field as keyof RegisterValues, { type: 'server', message: msg })
+            })
+          }
+          setFormError(error.message)
         } else {
           setFormError('Terjadi kesalahan. Coba lagi.')
         }
@@ -93,14 +105,30 @@ export default function LoginPage() {
             <Wordmark size={44} />
           </div>
 
-          <p className="eyebrow mb-3.5 text-primary">Selamat Datang</p>
-          <h1 className="mb-2 text-[33px] leading-tight font-semibold text-ink">Masuk ke Akun</h1>
+          <p className="eyebrow mb-3.5 text-primary">Keanggotaan Baru</p>
+          <h1 className="mb-2 text-[33px] leading-tight font-semibold text-ink">Registrasi Anggota</h1>
           <p className="text-[15px] text-muted-foreground">
-            Gunakan email terdaftar Anda untuk melanjutkan.
+            Lengkapi formulir di bawah ini untuk membuat akun perpustakaan Anda.
           </p>
           <div className="mt-5 mb-7 h-0.5 w-[54px] bg-primary" />
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+            <div className="space-y-2">
+              <Label htmlFor="name">Nama Lengkap</Label>
+              <div className="relative">
+                <UserIcon className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#a99a84]" />
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Masukkan nama lengkap Anda"
+                  className="pl-10"
+                  aria-invalid={Boolean(errors.name)}
+                  {...register('name')}
+                />
+              </div>
+              {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
@@ -125,8 +153,8 @@ export default function LoginPage() {
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  placeholder="Minimal 8 karakter"
                   className="px-10"
                   aria-invalid={Boolean(errors.password)}
                   {...register('password')}
@@ -145,17 +173,31 @@ export default function LoginPage() {
               )}
             </div>
 
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-[13px] text-muted-foreground">
-                <input
-                  type="checkbox"
-                  className="size-4 rounded-sm border-input accent-primary"
+            <div className="space-y-2">
+              <Label htmlFor="password_confirmation">Konfirmasi Kata Sandi</Label>
+              <div className="relative">
+                <LockIcon className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#a99a84]" />
+                <Input
+                  id="password_confirmation"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
+                  placeholder="Masukkan ulang kata sandi"
+                  className="px-10"
+                  aria-invalid={Boolean(errors.password_confirmation)}
+                  {...register('password_confirmation')}
                 />
-                Ingat saya
-              </label>
-              <span className="cursor-pointer text-[13px] font-semibold text-primary hover:underline">
-                Lupa kata sandi?
-              </span>
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((v) => !v)}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-[#a99a84] hover:text-foreground"
+                  aria-label={showConfirmPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                >
+                  {showConfirmPassword ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+                </button>
+              </div>
+              {errors.password_confirmation && (
+                <p className="text-xs text-destructive">{errors.password_confirmation.message}</p>
+              )}
             </div>
 
             {formError && (
@@ -167,9 +209,9 @@ export default function LoginPage() {
               </div>
             )}
 
-            <Button type="submit" size="lg" className="w-full" disabled={login.isPending}>
-              {login.isPending ? 'Memproses…' : 'Masuk'}
-              {!login.isPending && <ArrowRightIcon className="size-4" />}
+            <Button type="submit" size="lg" className="w-full" disabled={registerMutation.isPending}>
+              {registerMutation.isPending ? 'Memproses…' : 'Daftar Anggota'}
+              {!registerMutation.isPending && <ArrowRightIcon className="size-4" />}
             </Button>
           </form>
 
@@ -179,9 +221,9 @@ export default function LoginPage() {
             <div className="h-px flex-1 bg-border" />
           </div>
           <p className="text-center text-[13px] text-[#827e74]">
-            Belum punya akun?{' '}
-            <Link to="/register" className="font-semibold text-primary hover:underline">
-              Daftar
+            Sudah memiliki akun?{' '}
+            <Link to="/login" className="font-semibold text-primary hover:underline">
+              Masuk di sini
             </Link>
           </p>
         </div>

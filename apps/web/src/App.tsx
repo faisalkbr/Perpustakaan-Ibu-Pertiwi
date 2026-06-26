@@ -5,6 +5,7 @@ import ProtectedRoute from '@/routes/ProtectedRoute'
 import MemberLayout from '@/layouts/MemberLayout'
 import LibrarianLayout from '@/layouts/LibrarianLayout'
 import LoginPage from '@/pages/LoginPage'
+import RegisterPage from '@/pages/RegisterPage'
 import CatalogPage from '@/pages/CatalogPage'
 import BookDetailPage from '@/pages/BookDetailPage'
 import HistoryPage from '@/pages/HistoryPage'
@@ -28,12 +29,19 @@ function LoginRoute() {
   return token ? <Navigate to={homePathForRole(user?.role)} replace /> : <LoginPage />
 }
 
+function RegisterRoute() {
+  const token = useAuthStore((s) => s.token)
+  const user = useAuthStore((s) => s.user)
+  return token ? <Navigate to={homePathForRole(user?.role)} replace /> : <RegisterPage />
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route index element={<HomeRedirect />} />
         <Route path="/login" element={<LoginRoute />} />
+        <Route path="/register" element={<RegisterRoute />} />
 
         {/* Member */}
         <Route element={<ProtectedRoute allow={['member']} />}>

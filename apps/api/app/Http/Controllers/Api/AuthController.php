@@ -18,7 +18,13 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-        $user = User::create($request->validated());
+        $user = User::create(array_merge(
+            $request->validated(),
+            [
+                'role' => User::ROLE_MEMBER,
+                'is_active' => true,
+            ]
+        ));
 
         $token = $user->createToken('spa')->plainTextToken;
 
