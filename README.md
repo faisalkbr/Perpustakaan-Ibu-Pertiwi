@@ -25,15 +25,24 @@ akademik (EB Garamond · Source Serif 4 · Libre Franklin), dan ruang putih yang
 
 ## Peran & alur (member flow)
 
-Domain: **Sistem Informasi Peminjaman**. Saat ini halaman **Anggota** sudah jalan:
+Domain: **Sistem Informasi Peminjaman**, dengan akses berbasis peran (RBAC).
+
+**Anggota** (login → `/catalog`):
 
 1. **Login** — autentikasi token, panel editorial gaya Harvard.
 2. **Katalog Buku** — grid responsif, cari + filter kategori + sort, status ketersediaan.
 3. **Detail & Pengajuan Peminjaman** — metadata buku + modal konfirmasi pengajuan.
 4. **Riwayat Peminjaman** — tab Semua/Aktif/Selesai, baris dapat di-*expand* (denda, sisa waktu).
 
-Peran **Pustakawan** & **Kepala Perpustakaan** sudah disiapkan di backend (kolom `role`,
-status peminjaman) untuk dikembangkan berikutnya.
+**Pustakawan / Kepala Perpustakaan** (login → `/admin`, layout sidebar):
+
+5. **Data Buku** — tabel CRUD buku + modal tambah/edit.
+6. **Data Anggota** — tabel CRUD anggota (nama, email, telepon, status aktif).
+7. **Konfirmasi Peminjaman** — antrean pengajuan (Menunggu/Disetujui/Ditolak), setujui/tolak.
+8. **Pengembalian** — daftar peminjaman aktif, proses pengembalian + hitung denda otomatis.
+
+Routing dijaga di dua sisi: middleware `role:librarian,head` di API dan `ProtectedRoute`
+berbasis peran di frontend (anggota tidak bisa membuka `/admin`, dan sebaliknya).
 
 ## Prasyarat
 
@@ -119,6 +128,18 @@ Base URL: `/api/v1`. Auth memakai **Bearer token** (Laravel Sanctum).
 | GET    | `/loans`            | ✓    | Riwayat peminjaman user (`?group=aktif\|selesai`, `?status=`) |
 | POST   | `/loans`            | ✓    | Ajukan peminjaman `{ book_id }` (status `pending`, jatuh tempo +14 hari) |
 | GET    | `/loans/{id}`       | ✓    | Detail peminjaman (milik user) |
+
+Khusus **Pustakawan / Kepala** (`role:librarian,head`):
+
+| Method | Endpoint                            | Keterangan |
+|--------|-------------------------------------|------------|
+| POST   | `/books` · PATCH/DELETE `/books/{id}` | Kelola buku |
+| GET/POST/PATCH/DELETE | `/members[/{id}]`    | Kelola anggota |
+| GET    | `/librarian/loans`                  | Semua peminjaman (`?status=`) |
+| GET    | `/librarian/loans/counts`           | Jumlah `pending` & `active` (badge) |
+| POST   | `/librarian/loans/{id}/approve`     | Setujui (pending → active) |
+| POST   | `/librarian/loans/{id}/reject`      | Tolak (pending → rejected) |
+| POST   | `/librarian/loans/{id}/return`      | Pengembalian (active → returned + denda) |
 
 ## Catatan arsitektur
 

@@ -28,6 +28,11 @@ class LoanResource extends JsonResource
             'fine' => $this->fine,
             'days_remaining' => $this->daysRemaining(),
             'book' => BookResource::make($this->whenLoaded('book')),
+            'member' => $this->whenLoaded('user', fn () => [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+                'email' => $this->user->email,
+            ]),
             'created_at' => $this->created_at?->toISOString(),
         ];
     }

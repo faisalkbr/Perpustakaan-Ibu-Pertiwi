@@ -17,12 +17,21 @@ class LoanSeeder extends Seeder
     {
         $members = User::factory()->count(6)->role(User::ROLE_MEMBER)->create();
 
+        // Active loans → realistic availability mix in the catalog.
         Book::query()->inRandomOrder()->limit(12)->get()->each(function (Book $book) use ($members): void {
             Loan::factory()
                 ->active()
                 ->for($members->random())
                 ->for($book)
                 ->create();
+        });
+
+        // Pending requests → populate the librarian "Konfirmasi Peminjaman" queue.
+        Book::query()->inRandomOrder()->limit(5)->get()->each(function (Book $book) use ($members): void {
+            Loan::factory()
+                ->for($members->random())
+                ->for($book)
+                ->create(); // default state = pending
         });
     }
 }

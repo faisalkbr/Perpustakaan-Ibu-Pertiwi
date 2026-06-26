@@ -25,5 +25,14 @@ export const queryKeys = {
     all: ['loans'] as const,
     list: (params: LoanListParams) => ['loans', 'list', params] as const,
   },
+  members: {
+    all: ['members'] as const,
+    list: (params: Record<string, unknown>) => ['members', 'list', params] as const,
+  },
+  librarianLoans: {
+    all: ['librarian-loans'] as const,
+    list: (status?: string) => ['librarian-loans', 'list', status ?? 'all'] as const,
+    counts: ['librarian-loans', 'counts'] as const,
+  },
   categories: ['categories'] as const,
 }
