@@ -1,0 +1,153 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   Perpustakaan Ibu Pertiwi — Harvard Library design system
+   Crimson + warm paper + academic serif typography.
+   ============================================================ */
+
+:root {
+  --radius: 0.25rem;
+
+  /* Brand palette (raw) */
+  --crimson: #a51c30;
+  --crimson-deep: #8e1a2b;
+  --panel: #1f1b1a;
+  --cream: #f4ece4;
+  --paper: #efeeeb;
+  --ink: #1e1e1e;
+
+  /* shadcn semantic tokens */
+  --background: #efeeeb;
+  --foreground: #1e1e1e;
+  --card: #ffffff;
+  --card-foreground: #1e1e1e;
+  --popover: #ffffff;
+  --popover-foreground: #1e1e1e;
+  --primary: #a51c30;
+  --primary-foreground: #fdf6f4;
+  --secondary: #eceae4;
+  --secondary-foreground: #3a3a3a;
+  --muted: #eceae4;
+  --muted-foreground: #827e74;
+  --accent: #f3efe9;
+  --accent-foreground: #3a3a3a;
+  --destructive: #9a1b1b;
+  --destructive-foreground: #ffffff;
+  --border: #e4e1da;
+  --input: #d6d2ca;
+  --ring: #a51c30;
+
+  /* Status tints (member loan / catalog) */
+  --ok: #226843;
+  --ok-bg: #e9f3ec;
+  --ok-border: #c9e3d2;
+  --warn: #9a6b12;
+  --warn-bg: #fbf1de;
+  --warn-border: #f0ddb4;
+  --bad: #9a1b1b;
+  --bad-bg: #fbedec;
+  --bad-border: #f1d3d1;
+}
+
+.dark {
+  --background: #16130f;
+  --foreground: #f4ece4;
+  --card: #1f1b1a;
+  --card-foreground: #f4ece4;
+  --popover: #1f1b1a;
+  --popover-foreground: #f4ece4;
+  --primary: #c8324a;
+  --primary-foreground: #fff;
+  --secondary: #2a2421;
+  --secondary-foreground: #e8e2d8;
+  --muted: #2a2421;
+  --muted-foreground: #a99f90;
+  --accent: #2a2421;
+  --accent-foreground: #f4ece4;
+  --destructive: #d8543f;
+  --destructive-foreground: #fff;
+  --border: #322b27;
+  --input: #322b27;
+  --ring: #c8324a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand-specific colors usable as utilities (bg-crimson, text-cream, …) */
+  --color-crimson: var(--crimson);
+  --color-crimson-deep: var(--crimson-deep);
+  --color-panel: var(--panel);
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
+
+  --font-sans: 'Libre Franklin', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-garamond: 'EB Garamond', 'Source Serif 4', Georgia, serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  /* Brand wordmark stacked: IBU PERTIWI / LIBRARY */
+  .wordmark-main {
+    font-family: var(--font-garamond);
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    white-space: nowrap;
+  }
+  .wordmark-sub {
+    font-family: var(--font-garamond);
+    font-weight: 500;
+    letter-spacing: 0.36em;
+    white-space: nowrap;
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+}
