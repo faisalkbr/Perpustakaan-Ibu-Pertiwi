@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { loginSchema, type LoginValues } from '@/schemas/auth'
 import { useLogin } from '@/hooks/useAuth'
 import { ApiError } from '@/lib/api'
+import { homePathForRole } from '@/lib/roles'
 
 function EditorialPanel() {
   return (
@@ -70,7 +71,7 @@ export default function LoginPage() {
   const onSubmit = (values: LoginValues) => {
     setFormError(null)
     login.mutate(values, {
-      onSuccess: () => navigate('/catalog', { replace: true }),
+      onSuccess: ({ user }) => navigate(homePathForRole(user.role), { replace: true }),
       onError: (error) => {
         if (error instanceof ApiError) {
           setFormError(error.fieldErrors.email ?? error.message)
