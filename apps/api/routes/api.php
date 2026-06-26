@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\LibrarianLoanController;
 use App\Http\Controllers\Api\LoanController;
 use App\Http\Controllers\Api\MemberController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\StaffController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,6 +54,15 @@ Route::prefix('v1')->group(function (): void {
             Route::post('librarian/loans/{loan}/approve', [LibrarianLoanController::class, 'approve']);
             Route::post('librarian/loans/{loan}/reject', [LibrarianLoanController::class, 'reject']);
             Route::post('librarian/loans/{loan}/return', [LibrarianLoanController::class, 'returnBook']);
+        });
+
+        // ---- Head librarian only ----
+        Route::middleware('role:head')->group(function (): void {
+            // Manage staff accounts (librarian / head)
+            Route::apiResource('staff', StaffController::class);
+
+            // Reports & recap
+            Route::get('reports/summary', [ReportController::class, 'summary']);
         });
     });
 });
