@@ -1,0 +1,29 @@
+{
+  "name": "perpustakaan-ibu-pertiwi",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Monorepo Perpustakaan Ibu Pertiwi — Laravel API + React frontend",
+  "workspaces": [
+    "apps/web"
+  ],
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "php apps/api/artisan serve --host=127.0.0.1 --port=8000",
+    "dev:web": "npm run dev --workspace web",
+    "build": "npm run build --workspace web",
+    "build:web": "npm run build --workspace web",
+    "lint": "npm run lint --workspace web",
+    "preview": "npm run preview --workspace web",
+    "api:migrate": "php apps/api/artisan migrate",
+    "api:fresh": "php apps/api/artisan migrate:fresh --seed",
+    "api:test": "php apps/api/artisan test",
+    "setup": "node scripts/setup.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

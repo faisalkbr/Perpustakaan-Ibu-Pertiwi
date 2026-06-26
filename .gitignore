@@ -1,0 +1,37 @@
+# ---- Root / tooling ----
+node_modules/
+.DS_Store
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.fleet/
+.cache/
+
+# ---- Frontend (apps/web) ----
+apps/web/node_modules/
+apps/web/dist/
+apps/web/.env
+apps/web/.env.local
+apps/web/.env.*.local
+
+# ---- Backend (apps/api) ----
+apps/api/vendor/
+apps/api/node_modules/
+apps/api/public/build/
+apps/api/public/hot
+apps/api/public/storage
+apps/api/storage/*.key
+apps/api/storage/pail
+apps/api/.env
+apps/api/.env.backup
+apps/api/.env.production
+apps/api/.phpunit.result.cache
+apps/api/Homestead.json
+apps/api/Homestead.yaml
+apps/api/auth.json
+apps/api/.fleet
+apps/api/.nova
+apps/api/.zed
+
+# Laravel logs/cache are inside storage/, which Laravel .gitignores per-folder
