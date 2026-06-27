@@ -30,6 +30,7 @@ class UpdateBookRequest extends FormRequest
         return [
             'title' => ['sometimes', 'required', 'string', 'min:2', 'max:150'],
             'author' => ['sometimes', 'required', 'string', 'min:2', 'max:100'],
+            'publisher' => ['sometimes', 'nullable', 'string', 'max:120'],
             'isbn' => ['sometimes', 'nullable', 'string', 'max:20', Rule::unique('books', 'isbn')->ignore($bookId)],
             'category' => ['sometimes', 'nullable', 'string', 'max:60'],
             'published_year' => ['sometimes', 'nullable', 'integer', 'min:1450', 'max:'.(date('Y') + 1)],
