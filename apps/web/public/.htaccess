@@ -1,0 +1,30 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Jangan rewrite file/folder yang benar-benar ada (aset: js, css, gambar, dll)
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Semua route lain dilempar ke index.html agar React Router (BrowserRouter)
+    # menangani client-side routing. Tanpa ini, refresh di /products dsb. -> 404.
+    RewriteRule ^ index.html [L]
+</IfModule>
+
+# Cache aset ber-hash lama (Vite menambahkan hash di nama file)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# index.html jangan di-cache agar deploy baru langsung kebaca
+<IfModule mod_headers.c>
+    <FilesMatch "index\.html$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+    </FilesMatch>
+</IfModule>
