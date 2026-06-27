@@ -21,13 +21,18 @@ Auth memakai Bearer token (Sanctum, tanpa cookie), jadi dua domain berbeda aman 
 4. **Buat file `.env`** di `apps/api/.env` berdasarkan `.env.production.example`:
    - Isi `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`.
    - Set `APP_URL=https://apilibrary.si-project.my.id` dan `FRONTEND_URL=https://iplibrary.si-project.my.id`.
-5. **Generate APP_KEY** (lewat Terminal cPanel kalau ada SSH):
+5. **Generate APP_KEY, migrasi & seed data awal** (lewat Terminal/SSH):
    ```bash
    php artisan key:generate
-   php artisan migrate --force        # buat tabel
-   php artisan db:seed --force        # opsional: data awal
+   php artisan migrate --force                                              # buat tabel
+   php artisan db:seed --class=Database\\Seeders\\ProductionSeeder --force  # akun admin + katalog buku
    ```
-   > Tanpa SSH: generate `APP_KEY` di lokal (`php artisan key:generate --show`) lalu tempel ke `.env` server. Migrasi bisa dijalankan via fitur *Terminal*/*Cron* cPanel atau impor SQL manual.
+   > **Penting:** jangan jalankan `php artisan db:seed --force` polos di produksi — `DatabaseSeeder`
+   > default berisi data demo yang butuh `fakerphp/faker` (dev-only, tidak ada di `--no-dev`).
+   > Gunakan `ProductionSeeder` (aman, idempoten, tanpa faker). Ubah email/password admin di
+   > [apps/api/database/seeders/ProductionSeeder.php](apps/api/database/seeders/ProductionSeeder.php) lebih dulu.
+   >
+   > Tanpa SSH: generate `APP_KEY` di lokal (`php artisan key:generate --show`) lalu tempel ke `.env` server.
 6. **Optimasi** (opsional tapi disarankan):
    ```bash
    php artisan config:cache
