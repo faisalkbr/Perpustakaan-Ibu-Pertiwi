@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 /**
  * Striped "sampul buku" placeholder cover (3:4) matching the design. When a
- * real cover image exists it is rendered instead.
+ * real cover image exists it is rendered instead — and if that image fails to
+ * load (e.g. the remote cover is missing), it falls back to the placeholder.
  */
 export function BookCover({
   title,
@@ -13,11 +15,18 @@ export function BookCover({
   src?: string | null
   className?: string
 }) {
-  if (src) {
+  const [failed, setFailed] = useState(false)
+
+  // Reset the error state when the source changes so a new URL gets a fresh try.
+  useEffect(() => setFailed(false), [src])
+
+  if (src && !failed) {
     return (
       <img
         src={src}
         alt={title ? `Sampul ${title}` : 'Sampul buku'}
+        loading="lazy"
+        onError={() => setFailed(true)}
         className={cn('aspect-[3/4] w-full rounded-sm object-cover', className)}
       />
     )

@@ -9,7 +9,7 @@ export function BookCard({ book }: { book: Book }) {
       to={`/books/${book.id}`}
       className="group flex flex-col overflow-hidden rounded-sm border border-border bg-card transition-shadow hover:shadow-[0_10px_30px_-12px_rgba(40,20,20,0.25)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/30"
     >
-      <BookCover title={book.title} className="rounded-none" />
+      <BookCover title={book.title} src={book.cover_url} className="rounded-none" />
       <div className="flex flex-1 flex-col p-4">
         {book.category && (
           <span className="eyebrow mb-2 inline-block w-fit rounded-sm bg-secondary px-1.5 py-1 text-[10px] text-secondary-foreground">

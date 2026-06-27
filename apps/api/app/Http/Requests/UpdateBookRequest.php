@@ -35,6 +35,7 @@ class UpdateBookRequest extends FormRequest
             'published_year' => ['sometimes', 'nullable', 'integer', 'min:1450', 'max:'.(date('Y') + 1)],
             'stock' => ['sometimes', 'required', 'integer', 'min:0', 'max:1000000'],
             'description' => ['sometimes', 'nullable', 'string', 'max:2000'],
+            'cover_url' => ['sometimes', 'nullable', 'url', 'max:500'],
         ];
     }
 }

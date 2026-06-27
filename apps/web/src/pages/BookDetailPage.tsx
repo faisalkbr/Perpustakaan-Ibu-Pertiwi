@@ -169,6 +169,7 @@ export default function BookDetailPage() {
         <div>
           <BookCover
             title={book.title}
+            src={book.cover_url}
             className="border border-[#dadde2] shadow-[0_8px_24px_rgba(40,20,20,0.08)]"
           />
         </div>

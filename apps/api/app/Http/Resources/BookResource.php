@@ -28,6 +28,7 @@ class BookResource extends JsonResource
             'available_copies' => $available,
             'is_available' => $available > 0,
             'description' => $this->description,
+            'cover_url' => $this->cover_url,
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];

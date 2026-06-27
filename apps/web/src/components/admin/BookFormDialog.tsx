@@ -26,6 +26,7 @@ const EMPTY: BookFormValues = {
   published_year: '',
   stock: '0',
   description: '',
+  cover_url: '',
 }
 
 function Field({
@@ -81,6 +82,7 @@ export function BookFormDialog({
             published_year: book.published_year != null ? String(book.published_year) : '',
             stock: String(book.stock),
             description: book.description ?? '',
+            cover_url: book.cover_url ?? '',
           }
         : EMPTY,
     )
@@ -129,6 +131,9 @@ export function BookFormDialog({
           </Field>
           <Field label="Stok" error={errors.stock?.message}>
             <Input type="number" {...register('stock')} />
+          </Field>
+          <Field label="URL Sampul" error={errors.cover_url?.message} className="col-span-2">
+            <Input placeholder="https://… (opsional)" {...register('cover_url')} />
           </Field>
           <Field label="Deskripsi" error={errors.description?.message} className="col-span-2">
             <Textarea placeholder="Ringkasan buku (opsional)" {...register('description')} />

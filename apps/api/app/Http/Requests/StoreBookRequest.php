@@ -30,6 +30,7 @@ class StoreBookRequest extends FormRequest
             'published_year' => ['nullable', 'integer', 'min:1450', 'max:'.(date('Y') + 1)],
             'stock' => ['required', 'integer', 'min:0', 'max:1000000'],
             'description' => ['nullable', 'string', 'max:2000'],
+            'cover_url' => ['nullable', 'url', 'max:500'],
         ];
     }
 }

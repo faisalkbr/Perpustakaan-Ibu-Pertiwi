@@ -26,6 +26,12 @@ export const bookSchema = z.object({
     .min(1, 'Stok wajib diisi')
     .refine((v) => /^\d+$/.test(v), 'Stok harus berupa angka'),
   description: z.string().trim().max(2000).optional(),
+  cover_url: z
+    .string()
+    .trim()
+    .max(500)
+    .optional()
+    .refine((v) => !v || /^https?:\/\/.+/.test(v), 'URL sampul tidak valid'),
 })
 
 export type BookFormValues = z.infer<typeof bookSchema>
@@ -42,5 +48,6 @@ export function toBookPayload(values: BookFormValues) {
     published_year: values.published_year ? Number(values.published_year) : undefined,
     stock: Number(values.stock),
     description: clean(values.description),
+    cover_url: clean(values.cover_url),
   }
 }

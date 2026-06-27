@@ -22,6 +22,7 @@ export interface BookPayload {
   published_year?: number
   stock: number
   description?: string
+  cover_url?: string
 }
 
 export const booksApi = {
